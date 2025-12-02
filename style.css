@@ -21,10 +21,10 @@ input[type="text"] {
   margin-right: 10px;
 }
 
-/* Estilo do botão */
+/* Estilo do botão principal */
 button {
-  background-color: #2c3e50; /* Azul escuro */
-  color: #ffffff;             /* Texto branco */
+  background-color: #2c3e50;
+  color: #ffffff;
   border: none;
   padding: 12px 20px;
   font-size: 16px;
@@ -34,7 +34,19 @@ button {
 }
 
 button:hover {
-  background-color: #34495e; /* Azul mais escuro ao passar o mouse */
+  background-color: #34495e;
+}
+
+/* Botão de remover */
+.btnRemover {
+  background-color: #e74c3c; /* Vermelho */
+  margin-left: 10px;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.btnRemover:hover {
+  background-color: #c0392b;
 }
 
 /* Estilo da lista */
@@ -48,7 +60,7 @@ li {
   background-color: #ffffff;
   padding: 10px;
   margin: 8px auto;
-  width: 300px;
+  width: 350px;
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   text-align: left;
