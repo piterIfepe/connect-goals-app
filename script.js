@@ -20,7 +20,19 @@ document.getElementById("btnAdicionar").onclick = function() {
 // Função para adicionar objetivo à lista e salvar
 function adicionarObjetivo(objetivo) {
     const li = document.createElement("li");
+    
     li.textContent = objetivo;
+
+    // Criar botão de remover
+    const btnRemover = document.createElement("button");
+    btnRemover.textContent = "Remover";
+    btnRemover.classList.add("btnRemover");
+    btnRemover.onclick = function() {
+        li.remove();
+        removerObjetivo(objetivo);
+    };
+
+    li.appendChild(btnRemover);
     document.getElementById("listaObjetivos").appendChild(li);
 
     // Salvar no localStorage
@@ -36,8 +48,13 @@ function carregarObjetivos() {
     lista.innerHTML = ""; // limpa lista antes de carregar
 
     objetivos.forEach(function(objetivo) {
-        const li = document.createElement("li");
-        li.textContent = objetivo;
-        lista.appendChild(li);
+        adicionarObjetivo(objetivo);
     });
+}
+
+// Função para remover objetivo do localStorage
+function removerObjetivo(objetivo) {
+    let objetivos = JSON.parse(localStorage.getItem("objetivos")) || [];
+    objetivos = objetivos.filter(o => o !== objetivo);
+    localStorage.setItem("objetivos", JSON.stringify(objetivos));
 }
