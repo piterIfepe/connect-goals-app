@@ -1,29 +1,27 @@
-// Alerta de boas-vindas
 window.onload = function() {
     alert("Bem-vindo à Connect Goals App MVP!");
-    carregarObjetivos(); // Carrega objetivos salvos ao iniciar
+    carregarObjetivos();
 };
 
-// Botão adicionar objetivo
 document.getElementById("btnAdicionar").onclick = function() {
     const input = document.getElementById("novoObjetivo");
+    const categoria = document.getElementById("categoria").value;
     const valor = input.value.trim();
 
     if(valor !== "") {
-        adicionarObjetivo(valor);
-        input.value = ""; // limpa o input
+        adicionarObjetivo(valor, categoria);
+        input.value = "";
     } else {
         alert("Digite um objetivo antes de adicionar!");
     }
 };
 
-// Função para adicionar objetivo à lista e salvar
-function adicionarObjetivo(objetivo) {
+function adicionarObjetivo(objetivo, categoria) {
     const li = document.createElement("li");
-    
     li.textContent = objetivo;
+    li.classList.add(categoria);
 
-    // Criar botão de remover
+    // Botão remover
     const btnRemover = document.createElement("button");
     btnRemover.textContent = "Remover";
     btnRemover.classList.add("btnRemover");
@@ -32,29 +30,47 @@ function adicionarObjetivo(objetivo) {
         removerObjetivo(objetivo);
     };
 
+    // Botão editar
+    const btnEditar = document.createElement("button");
+    btnEditar.textContent = "Editar";
+    btnEditar.classList.add("btnEditar");
+    btnEditar.onclick = function() {
+        const novoTexto = prompt("Edite seu objetivo:", objetivo);
+        if(novoTexto !== null && novoTexto.trim() !== "") {
+            li.firstChild.textContent = novoTexto;
+            atualizarObjetivo(objetivo, novoTexto);
+            objetivo = novoTexto; // Atualiza variável para remover depois
+        }
+    };
+
     li.appendChild(btnRemover);
+    li.appendChild(btnEditar);
     document.getElementById("listaObjetivos").appendChild(li);
 
     // Salvar no localStorage
     let objetivos = JSON.parse(localStorage.getItem("objetivos")) || [];
-    objetivos.push(objetivo);
+    objetivos.push({texto: objetivo, categoria: categoria});
     localStorage.setItem("objetivos", JSON.stringify(objetivos));
 }
 
-// Função para carregar objetivos salvos
 function carregarObjetivos() {
     let objetivos = JSON.parse(localStorage.getItem("objetivos")) || [];
     const lista = document.getElementById("listaObjetivos");
-    lista.innerHTML = ""; // limpa lista antes de carregar
+    lista.innerHTML = "";
 
-    objetivos.forEach(function(objetivo) {
-        adicionarObjetivo(objetivo);
+    objetivos.forEach(function(o) {
+        adicionarObjetivo(o.texto, o.categoria);
     });
 }
 
-// Função para remover objetivo do localStorage
 function removerObjetivo(objetivo) {
     let objetivos = JSON.parse(localStorage.getItem("objetivos")) || [];
-    objetivos = objetivos.filter(o => o !== objetivo);
+    objetivos = objetivos.filter(o => o.texto !== objetivo);
+    localStorage.setItem("objetivos", JSON.stringify(objetivos));
+}
+
+function atualizarObjetivo(oldText, newText) {
+    let objetivos = JSON.parse(localStorage.getItem("objetivos")) || [];
+    objetivos = objetivos.map(o => o.texto === oldText ? {...o, texto: newText} : o);
     localStorage.setItem("objetivos", JSON.stringify(objetivos));
 }
