@@ -12,7 +12,6 @@ document.getElementById("btnAdicionar").onclick = function() {
     if(valor !== "" && cidade !== "") {
         adicionarObjetivo(valor, categoria, cidade);
         input.value = "";
-        // Não limpa o campo cidade para permitir múltiplos objetivos na mesma cidade
     } else {
         alert("Digite um objetivo e a cidade antes de adicionar!");
     }
@@ -23,7 +22,6 @@ function adicionarObjetivo(objetivo, categoria, cidade) {
     li.textContent = `${objetivo} (${cidade})`;
     li.classList.add(categoria);
 
-    // Botão remover
     const btnRemover = document.createElement("button");
     btnRemover.textContent = "Remover";
     btnRemover.classList.add("btnRemover");
@@ -32,7 +30,6 @@ function adicionarObjetivo(objetivo, categoria, cidade) {
         removerObjetivo(objetivo, cidade);
     };
 
-    // Botão editar
     const btnEditar = document.createElement("button");
     btnEditar.textContent = "Editar";
     btnEditar.classList.add("btnEditar");
@@ -41,7 +38,7 @@ function adicionarObjetivo(objetivo, categoria, cidade) {
         if(novoTexto !== null && novoTexto.trim() !== "") {
             li.firstChild.textContent = `${novoTexto} (${cidade})`;
             atualizarObjetivo(objetivo, novoTexto, cidade);
-            objetivo = novoTexto; // Atualiza variável para remover depois
+            objetivo = novoTexto;
         }
     };
 
@@ -49,7 +46,6 @@ function adicionarObjetivo(objetivo, categoria, cidade) {
     li.appendChild(btnEditar);
     document.getElementById("listaObjetivos").appendChild(li);
 
-    // Salvar no localStorage
     let objetivos = JSON.parse(localStorage.getItem("objetivos")) || [];
     objetivos.push({texto: objetivo, categoria: categoria, cidade: cidade});
     localStorage.setItem("objetivos", JSON.stringify(objetivos));
@@ -60,8 +56,9 @@ function carregarObjetivos() {
     const lista = document.getElementById("listaObjetivos");
     lista.innerHTML = "";
 
-    const cidadeAtual = prompt("Digite sua cidade para ver os objetivos:");
-    
+    const cidadeAtual = document.getElementById("cidade").value.trim();
+    if(cidadeAtual === "") return;
+
     objetivos
         .filter(o => o.cidade.toLowerCase() === cidadeAtual.toLowerCase())
         .forEach(function(o) {
